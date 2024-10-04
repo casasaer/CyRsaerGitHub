@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "656321068941",
+    "project_id": "cyr-saer",
+    "storage_bucket": "cyr-saer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656321068941:android:6bab8409bc18e0c9f087c4",
+        "android_client_info": {
+          "package_name": "com.saeo.cyrsaer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6EJMjnCOJ9zkrJKOY-QH8wTQ1wytd_yM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
