@@ -9,17 +9,17 @@ import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.print.PrintManager
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.saeo.cyrsaer.R
 import java.io.FileOutputStream
 
 object AdministradorUtils {
 
     fun cambiarEstadoCamarero(uid: String, habilitado: Boolean) {
-        val database = FirebaseDatabase.getInstance()
-        val camareroRef = database.reference.child("usuarios").child(uid)
+        val db = FirebaseFirestore.getInstance()
 
-        camareroRef.child("habilitado").setValue(habilitado)
+        db.collection("usuarios").document(uid)
+            .update("habilitado", habilitado)
             .addOnSuccessListener {
                 // Estado del camarero actualizado correctamente
             }
@@ -77,6 +77,4 @@ object AdministradorUtils {
 
         }, null)
     }
-
 }
-

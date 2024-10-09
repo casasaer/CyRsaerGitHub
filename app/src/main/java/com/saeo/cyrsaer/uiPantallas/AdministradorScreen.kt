@@ -3,21 +3,24 @@ package com.saeo.cyrsaer.uiPantallas
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.saeo.cyrsaer.model.Camarero
+import com.saeo.cyrsaer.uiPantallas.AdministradorUtils.imprimirReporte
 
 @SuppressLint("RestrictedApi")
 @Composable
@@ -27,48 +30,40 @@ fun AdministradorScreen(navController: NavController, uid: String) {
 
     // Obtener la lista de camareros de Firebase
     LaunchedEffect(key1 = true) {
-        val database = FirebaseDatabase.getInstance()
-        val camarerosRef =
-            database.reference.child("usuarios").orderByChild("rol").equalTo("camarero")
+        val db = FirebaseFirestore.getInstance()
+        db.collection("usuarios")
+            .whereEqualTo("rol", "camarero")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    // Manejar errores
+                    return@addSnapshotListener
+                }
 
-        val camarerosListener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
                 val camarerosList = mutableListOf<Camarero>()
-                for (camareroSnapshot in snapshot.children) {
-                    val camarero = camareroSnapshot.getValue(Camarero::class.java)
-                    if (camarero != null) {
-                        camarerosList.add(camarero)
-                    }
+                for (camareroSnapshot in snapshot!!) {
+                    val camarero = camareroSnapshot.toObject(Camarero::class.java)
+                    camarerosList.add(camarero)
                 }
                 camareros = camarerosList
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Manejar errores
-            }
-        }
-        camarerosRef.addValueEventListener(camarerosListener)
     }
 
     // Obtener los reportes de ventas (Este código necesita ser adaptado a tu lógica)
     LaunchedEffect(key1 = true) {
-        val database = FirebaseDatabase.getInstance()
-        val pedidosRef = database.reference.child("pedidos")
+        val db = FirebaseFirestore.getInstance()
+        db.collection("pedidos")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    // Manejar errores
+                    return@addSnapshotListener
+                }
 
-        val pedidosListener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
                 val ventasPorDia = mutableMapOf<String, Double>()
-                for (pedidoSnapshot in snapshot.children) {
+                for (pedidoSnapshot in snapshot!!) {
                     // ... (Tu lógica para obtener los reportes)
                 }
                 reportes = ventasPorDia
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Manejar errores
-            }
-        }
-        pedidosRef.addValueEventListener(pedidosListener)
     }
 
     LazyColumn {
@@ -93,19 +88,12 @@ fun AdministradorScreen(navController: NavController, uid: String) {
         }
 
         item {
+            val context = LocalContext.current
             Button(onClick = {
-                @Composable {
-                    ImprimirReporte(reportes)
-                }
+                AdministradorUtils.imprimirReporte(reportes, context)
             }) {
                 Text("Imprimir reporte")
             }
         }
     }
-}
-
-@Composable
-fun ImprimirReporte(reportes: Map<String, Double>) {
-    val context = LocalContext.current
-    AdministradorUtils.imprimirReporte(reportes, context)
 }

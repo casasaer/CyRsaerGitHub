@@ -14,6 +14,7 @@ import com.saeo.cyrsaer.uiPantallas.CamareroScreen
 import com.saeo.cyrsaer.uiPantallas.JefeCocinaScreen
 import com.saeo.cyrsaer.uiPantallas.LoginScreen
 import com.saeo.cyrsaer.uiPantallas.NuevoPedidoScreen
+import com.saeo.cyrsaer.uiPantallas.RegistroScreen
 import com.saeo.cyrsaer.uiPantallas.SplashScreen
 
 class MainActivity : ComponentActivity() {
@@ -51,6 +52,10 @@ class MainActivity : ComponentActivity() {
                                 backStackEntry.arguments?.getString("uid") ?: ""
                             )
                         }
+                        composable("login") { LoginScreen(navController) }
+                        composable("registro") { RegistroScreen(navController) }
+
+
                         // ... Agrega más rutas para otras pantallas
                     }
                 }

@@ -80,10 +80,12 @@ dependencies {
     implementation(libs.androidx.print)
 
     // ... otras dependencias
-    implementation(libs.firebase.database.ktx) // Para Realtime Database
+    // implementation(libs.firebase.database.ktx) // Para Realtime Database
     implementation(libs.firebase.auth.ktx) // Para autenticación
+    implementation(libs.firebase.firestore.ktx)
 
     // Agrega otras dependencias según tus necesidades (Cloud Storage, Cloud Functions, etc.)
+
 
 
     }
